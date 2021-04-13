@@ -44,6 +44,42 @@ app.component('app-footer', {
     }
 });
 
+app.component('upload-form', {
+    name: 'Upload-Form',
+    template: `
+        <form @submit.prevent="uploadPhoto" method="POST" enctype="multipart/form-data">
+        
+        <div class = "form-group">
+            <input type=file name=photo>
+        </div>
+
+        <div class = "form-group">
+            {{ form.description.label }}
+            <p>Description</p>
+            {{ form.description(class="form-control") }}
+        </div>
+
+        <button type="submit" name="submit" class="btn btn-primary">Upload file</button>
+        </form>
+    `,
+    
+    uploadPhoto(){
+        fetch("/api/upload", {
+            method: 'POST'
+           })
+            .then(function (response) {
+            return response.json();
+            })
+            .then(function (jsonResponse) {
+            // display a success message
+            console.log(jsonResponse);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+    }
+});
+
 const Home = {
     name: 'Home',
     template: `
