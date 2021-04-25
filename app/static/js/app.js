@@ -22,6 +22,9 @@ app.component('app-header', {
           <li class="nav-item active">
             <router-link class="nav-link" to="/">Home <span class="sr-only">(current)</span></router-link>
           </li>
+          <li class="nav-item active">
+            <router-link class="nav-link" to="/upload">Upload Form <span class="sr-only">(current)</span></router-link>
+          </li>
         </ul>
       </div>
     </nav>
@@ -45,28 +48,35 @@ app.component('app-footer', {
 });
 
 const UploadForm = {
-    name: 'Upload-Form',
+    name: 'UploadForm',
     template: `
-        <form @submit.prevent="uploadPhoto" method="POST" enctype="multipart/form-data">
         
-        <div class = "form-group">
-            <input type=file name=photo>
+    <form id="uploadForm"  @submit.prevent="uploadPhoto" method="POST" enctype="multipart/form-data">  
+        <div class="field-group">
+            <label for="photo"> Upload Photo</label>
+            <input type=file name="photo" class="form-control-file">
         </div>
 
-        <div class = "form-group">
-            {{ form.description.label }}
-            <p>Description</p>
-            {{ form.description(class="form-control") }}
+        <div class="form-group">
+            <label for="description"> Description</label>
+            <input type=text name="description" class="form-control">
         </div>
 
-        <button type="submit" name="submit" class="btn btn-primary">Upload file</button>
-        </form>
+        <button type="submit" name="submit" class="btn btn-success mt-2">Upload file</button>
+    </form>
     `,
-    
     uploadPhoto() {
+        let uploadForm = document.getElementById('uploadForm');
+        let form_data = new FormData(uploadForm);
         fetch("/api/upload", {
-            method: 'POST'
+            method: 'POST',
+            body: form_data,
+            headers: {
+                'X-CSRFToken': token
+            },
+            credentials: 'same-origin'
             })
+            
             .then(function (response) {
             return response.json();
             })
@@ -109,7 +119,7 @@ const NotFound = {
 const routes = [
     { path: "/", component: Home },
     // Put other routes here
-    { path: "/", component: UploadForm },
+    { path: "/upload", component: UploadForm },
     // This is a catch all route in case none of the above matches
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound }
 ];
