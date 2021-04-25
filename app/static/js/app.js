@@ -44,7 +44,7 @@ app.component('app-footer', {
     }
 });
 
-app.component('upload-form', {
+const UploadForm = {
     name: 'Upload-Form',
     template: `
         <form @submit.prevent="uploadPhoto" method="POST" enctype="multipart/form-data">
@@ -63,10 +63,10 @@ app.component('upload-form', {
         </form>
     `,
     
-    uploadPhoto(){
+    uploadPhoto() {
         fetch("/api/upload", {
             method: 'POST'
-           })
+            })
             .then(function (response) {
             return response.json();
             })
@@ -78,7 +78,7 @@ app.component('upload-form', {
             console.log(error);
             });
     }
-});
+};
 
 const Home = {
     name: 'Home',
@@ -109,7 +109,7 @@ const NotFound = {
 const routes = [
     { path: "/", component: Home },
     // Put other routes here
-
+    { path: "/", component: UploadForm },
     // This is a catch all route in case none of the above matches
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound }
 ];
